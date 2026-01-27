@@ -1,153 +1,51 @@
 import 'package:flutter/material.dart';
-import '/screens/containerhome.dart';
+import '/widget/bottomnav.dart';
+import '/widget/drawer.dart';
+import '/widget/appbar.dart';
+import '/screens/homescreen.dart';
+import '/screens/favoritescreen.dart';
+import '/screens/sharescreen.dart';
+import '/screens/recipescreen.dart';
+import '/screens/morescreen.dart';
 
 void main() {
   runApp(const DevacctoProject());
 }
 
-class DevacctoProject extends StatelessWidget {
+class DevacctoProject extends StatefulWidget {
   const DevacctoProject({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<DevacctoProject> createState() => _DevacctoProjectState();
+}
+
+class _DevacctoProjectState extends State<DevacctoProject> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    HomeScreen(),
+    FavoriteScreen(),
+    ShareScreen(),
+    RecipeScreen(),
+    MoreScreen(),
+  ];
+
+  void _NavTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Devaccto flutter',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFF5D866C),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Text('Welcome Back!'),
-                      Text('User Name'),
-                    ],
-                  ),
-                ),
-                Icon(Icons.account_circle),
-              ],
-            ),
-          ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Messages'),
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('Profile'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 17.0),
-              width: 431,
-              height: 100,
-              color: Color(0xFF5D866C),
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Search...',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Image.asset(
-              'assets/images/foodie.jpeg', 
-              width: 431.0, 
-              height: 150.0,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 25.0),
-              width: 431,
-              height: 300,
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ContainerHome(text: "breakfast", image: "assets/images/banana.jpeg",),
-                      ContainerHome(text: "lunch", image: "assets/images/donat.jpeg",),
-                      ContainerHome(text: "dinner", image: "assets/images/pancake.jpeg"),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ContainerHome(text: "salad", image: "assets/images/gudeg.jpeg"),
-                      ContainerHome(text: "drink", image: "assets/images/rawon.jpeg"),
-                      ContainerHome(text: "soup", image: "assets/images/sotobetawi.jpeg"),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Color(0xFF5D866C),
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'favorite',
-            ),
-            BottomNavigationBarItem(  
-              icon: Icon(Icons.add),
-              label: 'Share',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.receipt),
-              label: 'recipe',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'More',
-            )
-          ],
+        appBar: appbar(),
+        body: IndexedStack(index: _currentIndex, children: _pages),
+        drawer: drawer(),
+        bottomNavigationBar: Bottomnav(
+          currentIndex: _currentIndex,
+          onTap: _NavTapped,
         ),
       ),
       debugShowCheckedModeBanner: false,
